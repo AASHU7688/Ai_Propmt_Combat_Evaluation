@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Images - AI Prompt Combat</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        .container { max-width: 800px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #f9f9f9; }
+        input, button { padding: 10px; margin: 10px; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .image-container { display: flex; flex-wrap: wrap; justify-content: center; }
+        .image-container img { width: 150px; height: 150px; object-fit: cover; margin: 10px; border: 1px solid #ddd; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload Images for Comparison</h2>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label>Upload Ideal Image:</label>
+            <input type="file" name="ideal_image" required><br>
+            <label>Upload Images to Compare:</label>
+            <input type="file" name="images" multiple required><br>
+            <button type="submit">Upload & Compare</button>
+        </form>
+        
+        {% if file_uploaded %}
+            <h3>Ideal Image:</h3>
+            <img src="{{ ideal_image_url }}" alt="Ideal Image" width="200px" height="200px">
+            
+            <h3>Comparison Scores:</h3>
+            <table>
+                <tr><th>Image</th><th>Similarity Score (%)</th></tr>
+                {% for name, score in scores.items %}
+                    <tr>
+                        <td>
+                            <img src="{{ MEDIA_URL }}uploaded_images/{{ name }}" alt="{{ name }}" width="100px">
+                        </td>
+                        <td>{{ score }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>
